@@ -38,23 +38,36 @@ The `skills/` folders are the installable runtime units. The `evals/prompts/` fi
 
 ## Installation
 
-Install the needed folders under `skills/` with your Codex skill installation flow.
-
-Recommended MVP install set:
+Install skills from:
 
 ```text
-skills/graph-sync-curator
-skills/graph-sync-project
-skills/graph-sync-repo-lifecycle
+git@github.com:wordlift/graph-sync-agent-kit.git
 ```
 
-Add focused review/authoring skills as needed:
+### Codex-Assisted Install
+
+Ask Codex to install every skill in this repository:
 
 ```text
-skills/graph-sync-yarrrml-review
-skills/graph-sync-postprocessor-authoring
-skills/graph-sync-github-workflow-review
+Use $skill-installer to install all skills under skills/ from wordlift/graph-sync-agent-kit.
 ```
+
+Install all skills in this kit. They are designed to work together: `graph-sync-curator` orchestrates the workflow, while the other skills provide project, lifecycle, mapping, postprocessor, and GitHub workflow support.
+
+Restart Codex after installing skills.
+
+### Manual Install
+
+Clone the repository and copy all skill folders into Codex's skills directory:
+
+```bash
+git clone git@github.com:wordlift/graph-sync-agent-kit.git
+cd graph-sync-agent-kit
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
+cp -R skills/graph-sync-* "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+Restart Codex after copying skills.
 
 ## Usage
 
