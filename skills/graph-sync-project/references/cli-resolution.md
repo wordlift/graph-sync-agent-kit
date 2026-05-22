@@ -32,18 +32,18 @@ The intent of a smoke command is to verify that the project's graph-sync CLI pat
 Candidate command shapes:
 
 ```bash
-worai --config worai.toml graph sync run --profile <name> --help
+worai --config worai.toml --profile <name> graph sync run --help
 ```
 
 ```bash
-uv run worai --config worai.toml graph sync run --profile <name> --help
+uv run worai --config worai.toml --profile <name> graph sync run --help
 ```
 
 ```bash
-pipx run --spec worai==<version> worai --config worai.toml graph sync run --profile <name> --help
+pipx run --spec worai==<version> worai --config worai.toml --profile <name> graph sync run --help
 ```
 
-Use the project-documented equivalent when these shapes do not match the installed CLI.
+Use the project-documented equivalent when these shapes do not match the installed or pinned `worai` CLI. Prefer checking `--help` for that exact runner before assuming a command signature.
 
 ## Safety
 
