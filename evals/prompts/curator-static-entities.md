@@ -20,4 +20,4 @@ Expected output:
 - Concise researched facts and sources.
 - Proposed static entities and relationships.
 - Uncertain facts marked as unresolved.
-- Next implementation steps for graph-sync templates.
+- Next implementation steps for graph-sync project files.

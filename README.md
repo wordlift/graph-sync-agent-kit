@@ -58,22 +58,76 @@ skills/graph-sync-github-workflow-review
 
 ## Usage
 
-Use the curator as the main practitioner workflow:
+The prompts below are intentionally concrete. Replace `example.org`, repository URLs, profiles, and cluster names with the project you are working on.
+
+### Main curation workflow
 
 ```text
-Use $graph-sync-curator to plan and execute a graph-sync semantic curation workflow.
+Use $graph-sync-curator to start the graph-sync curation workflow for www.example.org.
 ```
 
-Use project support for implementation/runtime tasks:
+### Start a new project
 
 ```text
-Use $graph-sync-project to update a graph-sync project safely.
+Use $graph-sync-repo-lifecycle to create a new graph-sync project for example.org from the WordLift graph-sync template.
+
+Use the project name graph-sync-example-org and prepare it for the first working session.
 ```
 
-Use repo lifecycle for creation and closeout:
+### Clone and prepare an existing project
 
 ```text
-Use $graph-sync-repo-lifecycle to prepare or close out a graph-sync repository.
+Use $graph-sync-repo-lifecycle to clone git@github.com:wordlift/graph-sync-example-org.git and prepare the checkout for work.
+```
+
+### Create static entities
+
+```text
+Use $graph-sync-curator to create the static entities for example.org and propose the graph-sync project files that should represent them.
+```
+
+### Parse a sitemap and prioritize clusters
+
+```text
+Use $graph-sync-curator to parse the sitemap for example.org and recommend the next content cluster to implement.
+```
+
+### Work on a content cluster
+
+```text
+Use $graph-sync-curator to work on the product pages cluster for example.org and propose the graph-sync changes needed for that cluster.
+```
+
+### Update project files safely
+
+```text
+Use $graph-sync-project to implement the agreed product page mapping changes in this graph-sync project.
+```
+
+### Review a YARRRML mapping
+
+```text
+Use $graph-sync-yarrrml-review to review the mapping for Product pages.
+```
+
+### Author a postprocessor
+
+```text
+Use $graph-sync-postprocessor-authoring to add a postprocessor that normalizes VideoObject relationships for example.org pages.
+```
+
+### Review the GitHub workflow
+
+```text
+Use $graph-sync-github-workflow-review to review the graph-sync GitHub Actions workflow.
+```
+
+### Close out a successful session
+
+```text
+Use $graph-sync-repo-lifecycle to close out this graph-sync project session.
+
+The curation changes have been validated. Prepare a safe commit and ask before pushing.
 ```
 
 ## Tool Portability
