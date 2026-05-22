@@ -11,7 +11,7 @@ Use this skill to drive the day-to-day semantic curation workflow for WordLift g
 
 Use `graph-sync-project` when curation decisions become concrete project edits. Use `graph-sync-repo-lifecycle` when tested work should be committed or pushed.
 
-If the user asks for a full journey from project creation or checkout through curation and publishing, treat this skill as the orchestrator: coordinate with `graph-sync-repo-lifecycle` for repository setup and publishing, use `graph-sync-project` for implementation/runtime edits, and keep semantic decisions in this curator workflow.
+If the user asks for a full journey from project creation, repository URL, or existing checkout through curation and publishing, treat this skill as the orchestrator: coordinate with `graph-sync-repo-lifecycle` for repository setup and publishing, use `graph-sync-project` for implementation/runtime edits, and keep semantic decisions in this curator workflow.
 
 ## Workflow
 

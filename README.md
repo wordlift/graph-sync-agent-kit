@@ -60,13 +60,23 @@ skills/graph-sync-github-workflow-review
 
 The prompts below are intentionally concrete. Replace `example.org`, repository URLs, profiles, and cluster names with the project you are working on.
 
-### Main curation workflow
+### Start new project
 
 ```text
 Use $graph-sync-curator to start the graph-sync workflow for www.example.org.
 ```
 
-### Start a new project
+### Continue an existing project
+
+```text
+Use $graph-sync-curator to continue the graph-sync workflow for this existing project.
+```
+
+```text
+Use $graph-sync-curator to continue the graph-sync workflow for git@github.com:wordlift/graph-sync-example-org.git.
+```
+
+### Create project repository
 
 ```text
 Use $graph-sync-repo-lifecycle to create a new graph-sync project for example.org from the WordLift graph-sync template.
