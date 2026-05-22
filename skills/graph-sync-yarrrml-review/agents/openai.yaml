@@ -1,0 +1,4 @@
+interface:
+  display_name: "Graph Sync YARRRML Review"
+  short_description: "Review graph-sync YARRRML mappings"
+  default_prompt: "Use $graph-sync-yarrrml-review to audit this graph-sync mapping."

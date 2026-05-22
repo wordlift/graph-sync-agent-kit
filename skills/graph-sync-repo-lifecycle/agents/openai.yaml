@@ -1,0 +1,4 @@
+interface:
+  display_name: "Graph Sync Repo Lifecycle"
+  short_description: "Create, clone, commit, and push repos"
+  default_prompt: "Use $graph-sync-repo-lifecycle to prepare or close out a graph-sync repository."

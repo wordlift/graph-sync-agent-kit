@@ -1,0 +1,4 @@
+interface:
+  display_name: "Graph Sync Postprocessors"
+  short_description: "Author graph-sync postprocessors"
+  default_prompt: "Use $graph-sync-postprocessor-authoring to build or debug a graph-sync postprocessor."

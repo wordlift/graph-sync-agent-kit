@@ -1,0 +1,4 @@
+interface:
+  display_name: "Graph Sync Project"
+  short_description: "Work on graph-sync project files"
+  default_prompt: "Use $graph-sync-project to update a graph-sync project safely."

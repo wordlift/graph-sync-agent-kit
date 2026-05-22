@@ -1,0 +1,4 @@
+interface:
+  display_name: "Graph Sync Curator"
+  short_description: "Curate graph-sync semantic models"
+  default_prompt: "Use $graph-sync-curator to plan and execute a graph-sync semantic curation workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Graph Sync GitHub Review"
+  short_description: "Review graph-sync GitHub workflows"
+  default_prompt: "Use $graph-sync-github-workflow-review to review this graph-sync GitHub Actions workflow."
