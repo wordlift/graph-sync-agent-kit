@@ -11,6 +11,8 @@ Use this skill to drive the day-to-day semantic curation workflow for WordLift g
 
 Use `graph-sync-project` when curation decisions become concrete project edits. Use `graph-sync-repo-lifecycle` when tested work should be committed or pushed.
 
+If the user asks for a full journey from project creation or checkout through curation and publishing, treat this skill as the orchestrator: coordinate with `graph-sync-repo-lifecycle` for repository setup and publishing, use `graph-sync-project` for implementation/runtime edits, and keep semantic decisions in this curator workflow.
+
 ## Workflow
 
 ### 1. Create static entities
@@ -83,14 +85,14 @@ Use the SEO/GEO review lens before declaring a cluster complete.
 
 Read `references/seo-geo-review.md` for the review lens.
 
-### 6. Close out the session
+### 6. Prepare validated changes for publishing
 
 After generated artifacts are tested, validated, and accepted:
 
 - Summarize semantic changes.
 - Summarize validation results.
 - List remaining warnings or risks.
-- Suggest committing and pushing the changes.
+- Suggest publishing the validated changes.
 - If the user confirms, hand off to `graph-sync-repo-lifecycle`.
 
 Do not push without explicit user confirmation.

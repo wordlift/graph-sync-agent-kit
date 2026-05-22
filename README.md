@@ -63,7 +63,7 @@ The prompts below are intentionally concrete. Replace `example.org`, repository 
 ### Main curation workflow
 
 ```text
-Use $graph-sync-curator to start the graph-sync curation workflow for www.example.org.
+Use $graph-sync-curator to start the graph-sync workflow for www.example.org.
 ```
 
 ### Start a new project
