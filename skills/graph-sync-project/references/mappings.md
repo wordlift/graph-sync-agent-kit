@@ -27,3 +27,10 @@
   2. sibling `<file>.j2`
   3. sibling `<file>.liquid`
   4. plain file
+
+## Required And Optional Extraction
+- Classify important fields as required or optional during cluster modeling.
+- Use selective sources for fields that may be absent, so missing selectors do not emit empty literals or malformed IRIs.
+- Use root/page-level iterators only for triples guaranteed by the page contract, such as the primary entity skeleton.
+- Keep optional entity IRIs guarded by the source that proves the entity exists.
+- For creative works, treat authorship as expected unless the user accepts otherwise; missing authorship should be caught in validation and resolved with a better selector, another observed source, or an explicitly approved fallback.

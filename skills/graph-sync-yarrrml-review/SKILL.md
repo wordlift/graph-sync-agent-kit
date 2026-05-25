@@ -22,6 +22,7 @@ Check mappings for:
 - Morph-KGC compatibility.
 - Clear, minimal mapping rules.
 - Extraction rules that generalize across pages in the configured source.
+- Required vs optional field handling: selective sources should prevent empty triples, while validation should flag missing required fields.
 - Avoidance of hardcoded constants from sample pages.
 - Explicit IRIs and no blank nodes in emitted entities.
 - URL-valued schema properties as plain literals.
@@ -44,5 +45,7 @@ When reviewing:
 - Do not invent unsupported function syntax.
 - Do not use JSON-LD or other structured data markup as an extraction source.
 - Do not introduce absolute XPath selectors.
+- Do not use a root/page iterator to emit optional or conditionally present values that may become empty literals or malformed IRIs.
+- Do not silently downgrade expected authorship or other required creative-work properties; missing required data is a validation issue.
 - Do not add hardcoded fallbacks unless the user explicitly authorizes them.
 - Escalate when a requirement cannot be implemented cleanly with current mapping capabilities.
