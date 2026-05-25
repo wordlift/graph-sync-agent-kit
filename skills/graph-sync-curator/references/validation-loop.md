@@ -38,7 +38,9 @@ Record:
 
 After validation passes:
 
+- Inspect `git status`.
 - Summarize semantic changes.
 - Summarize validation results.
-- Recommend commit/push handoff to `graph-sync-repo-lifecycle`.
+- If project changes exist, ask whether to prepare a commit handoff to `graph-sync-repo-lifecycle`.
+- If no project changes exist, say that there is nothing to commit.
 - Require explicit user confirmation before any push.

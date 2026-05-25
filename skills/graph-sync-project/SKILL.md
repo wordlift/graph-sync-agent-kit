@@ -84,4 +84,4 @@ Summarize:
 - What validation ran.
 - Remaining risks or warnings.
 
-If work is tested and accepted, offer to hand off to `graph-sync-repo-lifecycle` for commit/push. Require explicit user confirmation before remote pushes.
+If work is tested and accepted, inspect `git status`. When project changes exist, explicitly ask whether to prepare a commit handoff through `graph-sync-repo-lifecycle`; if no project changes exist, say there is nothing to commit. Require explicit user confirmation before commits or remote pushes.

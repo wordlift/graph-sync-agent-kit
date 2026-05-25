@@ -89,10 +89,11 @@ Read `references/seo-geo-review.md` for the review lens.
 
 After generated artifacts are tested, validated, and accepted:
 
+- Inspect `git status` before the final response.
 - Summarize semantic changes.
 - Summarize validation results.
 - List remaining warnings or risks.
-- Suggest publishing the validated changes.
+- If project changes exist, explicitly ask whether to prepare a commit handoff through `graph-sync-repo-lifecycle`.
 - If the user confirms, hand off to `graph-sync-repo-lifecycle`.
 
-Do not push without explicit user confirmation.
+This commit-handoff prompt is required after a successful curation session even when the user did not mention commit or publish. Do not commit or push without explicit user confirmation.
