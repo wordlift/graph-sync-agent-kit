@@ -2,6 +2,13 @@
 
 Use this workflow for each prioritized dynamic content cluster.
 
+## Scope
+
+- Work on one selected cluster at a time.
+- Exclude URLs already handled by static templates or completed cluster routes.
+- Do not broaden mappings, routes, or postprocessors to unrelated URL patterns unless validation proves they share the same template and intent, or the user explicitly asks.
+- Record useful out-of-scope findings as backlog or next-cluster notes instead of implementing them immediately.
+
 ## Sample
 
 - Select representative URLs from the cluster.

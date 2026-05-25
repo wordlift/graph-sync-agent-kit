@@ -47,6 +47,7 @@ Read `references/sitemap-clustering.md` when planning or reviewing sitemap clust
 
 For the highest-priority unfinished cluster:
 
+- Stay scoped to the selected cluster until it is validated; capture unrelated URL patterns as next-cluster notes.
 - Sample representative URLs with Playwright or another available browser/tooling path.
 - Inspect HTML and XHR/network traffic before finalizing extraction.
 - Prefer structured upstream sources over brittle HTML parsing when available.
