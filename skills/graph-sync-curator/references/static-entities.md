@@ -25,6 +25,9 @@ Create or review:
   - `schema:sameAs` links to official social and authority profiles.
   - Address/contact details when validated.
   - Links to founders, CEO, parent/subsidiary, or brand entities when useful.
+- `Brand`
+  - Create only when the public brand identity is meaningfully distinct from the legal or operating organization.
+  - Use an explicit IRI, validated `schema:name`, and connect the organization with `schema:brand`.
 - `Person`
   - Explicit IRI.
   - Role/title and organization relationship.
