@@ -154,3 +154,7 @@ When running tools, prefer:
 ## Forward Testing
 
 The `evals/prompts/` directory contains maintainer prompt fixtures for forward-testing skills. Use them as test inputs, not runtime skill references.
+
+## CI Validation
+
+Pull requests and pushes to `main` run the agent-kit validation workflow. It checks the Codex and Claude plugin manifests, required skill metadata, eval prompt fixtures, Claude Code plugin strict validation, and the release archive shape.

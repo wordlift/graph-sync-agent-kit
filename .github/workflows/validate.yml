@@ -1,0 +1,51 @@
+name: Validate
+
+on:
+  workflow_call:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      CLAUDE_CODE_VERSION: "2.1.150"
+      DISABLE_AUTOUPDATER: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install validator dependencies
+        run: python -m pip install --upgrade PyYAML
+
+      - name: Validate agent kit structure
+        run: python scripts/validate_agent_kit.py .
+
+      - name: Install Claude Code CLI
+        run: npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}"
+
+      - name: Validate Claude Code plugin
+        run: claude plugin validate --strict .
+
+      - name: Build release archive smoke test
+        run: |
+          zip -r /tmp/graph-sync-agent-kit.zip \
+            .codex-plugin/ \
+            .claude-plugin/ \
+            skills/ \
+            README.md
+          unzip -t /tmp/graph-sync-agent-kit.zip
