@@ -42,7 +42,7 @@ Resolve project-generation tools in this order:
 Before the first commit:
 
 - Verify `.env` is ignored.
-- Check for generated secrets.
+- Run the secret hygiene checklist.
 - Inspect `git status`.
 - Avoid staging unrelated local files.
 
@@ -79,7 +79,8 @@ After cloning:
 When the user asks to publish, sync back, wrap up, commit, or push successful changes:
 
 - Inspect `git status`.
-- Review changed files and avoid secrets or unwanted generated artifacts.
+- Run the secret hygiene checklist.
+- Review changed files and avoid unwanted generated artifacts.
 - Run the project validation command if it has not already passed.
 - Summarize changed files and validation results.
 - Propose a clear commit message.
@@ -115,11 +116,21 @@ When a graph-sync CLI command is needed, do not assume `worai` is globally insta
 
 Ask before installing or fetching packages, and report which runner was used.
 
+## Secret Hygiene
+
+Before any commit or push:
+
+- Inspect changed and staged files before staging broadly.
+- Never stage `.env`, `.env.*` except intentional examples such as `.env.example`, `.codex/`, private keys, service-account JSON files, downloaded credentials, local provider configs, token dumps, or API response dumps.
+- Review diffs and config files for inline secrets or sensitive headers, including `api_key`, `token`, `secret`, `password`, `Authorization`, `X-API-Key`, `http_headers`, and service-account blocks.
+- If a secret appears in a tracked or staged file, stop and ask how to proceed; do not quote the secret value back to the user.
+- Use a project-documented secret scanner when one exists; otherwise keep the check manual and focused on changed files.
+
 ## Guardrails
 
 - Do not push without explicit user confirmation.
 - Do not force push unless the user explicitly requests it.
-- Do not commit `.env`, credentials, private keys, or local secret files.
+- Do not commit `.env`, credentials, private keys, `.codex/`, or local secret files.
 - Prefer explicit file staging over blind `git add .` after editing sessions.
 - Report validation failures before committing.
 - If the worktree contains unrelated user changes, leave them alone and stage only the intended files.
