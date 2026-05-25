@@ -8,6 +8,8 @@ on:
 jobs:
   validate:
     uses: ./.github/workflows/validate.yml
+    with:
+      expected-version: ${{ github.ref_name }}
 
   release:
     runs-on: ubuntu-latest
@@ -32,6 +34,9 @@ jobs:
           zip -r graph-sync-agent-kit-${{ github.ref_name }}.zip \
             .codex-plugin/ \
             .claude-plugin/ \
+            .pre-commit-config.yaml \
+            pyproject.toml \
+            scripts/ \
             skills/ \
             README.md
 

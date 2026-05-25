@@ -1,0 +1,15 @@
+repos:
+  - repo: local
+    hooks:
+      - id: sync-plugin-versions
+        name: Sync plugin manifest versions
+        entry: uv run python scripts/sync_versions.py
+        language: system
+        files: '^(pyproject\.toml|\.codex-plugin/plugin\.json|\.claude-plugin/plugin\.json)$'
+        pass_filenames: false
+
+      - id: validate-agent-kit
+        name: Validate agent kit
+        entry: uv run python scripts/validate_agent_kit.py .
+        language: system
+        pass_filenames: false

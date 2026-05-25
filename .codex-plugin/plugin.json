@@ -1,13 +1,19 @@
 {
   "name": "graph-sync-agent-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Agent skills for WordLift graph-sync curation, project implementation, repository lifecycle, YARRRML review, postprocessor authoring, and GitHub workflow review.",
   "author": {
     "name": "WordLift"
   },
   "homepage": "https://github.com/wordlift/graph-sync-agent-kit",
   "repository": "https://github.com/wordlift/graph-sync-agent-kit",
-  "keywords": ["graph-sync", "wordlift", "schema-org", "yarrrml", "skills"],
+  "keywords": [
+    "graph-sync",
+    "wordlift",
+    "schema-org",
+    "yarrrml",
+    "skills"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Graph Sync Agent Kit",
@@ -15,7 +21,11 @@
     "longDescription": "Use Graph Sync Agent Kit to run WordLift graph-sync workflows across semantic curation, static entities, sitemap clustering, mappings, postprocessors, repository lifecycle, and GitHub workflow review.",
     "developerName": "WordLift",
     "category": "Engineering",
-    "capabilities": ["Interactive", "Read", "Write"],
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
     "defaultPrompt": [
       "Start graph-sync curation for this website",
       "Review this graph-sync mapping",

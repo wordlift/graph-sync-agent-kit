@@ -2,11 +2,20 @@ name: Validate
 
 on:
   workflow_call:
+    inputs:
+      expected-version:
+        required: false
+        type: string
   pull_request:
   push:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      expected-version:
+        required: false
+        type: string
+        description: Expected version, with or without leading v
 
 jobs:
   validate:
@@ -32,8 +41,18 @@ jobs:
       - name: Install validator dependencies
         run: python -m pip install --upgrade PyYAML
 
+      - name: Check plugin manifest versions
+        run: python scripts/sync_versions.py --check
+
       - name: Validate agent kit structure
-        run: python scripts/validate_agent_kit.py .
+        env:
+          EXPECTED_VERSION: ${{ inputs['expected-version'] }}
+        run: |
+          args=()
+          if [ -n "${EXPECTED_VERSION}" ]; then
+            args+=(--expected-version "${EXPECTED_VERSION}")
+          fi
+          python scripts/validate_agent_kit.py . "${args[@]}"
 
       - name: Install Claude Code CLI
         run: npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}"
@@ -46,6 +65,9 @@ jobs:
           zip -r /tmp/graph-sync-agent-kit.zip \
             .codex-plugin/ \
             .claude-plugin/ \
+            .pre-commit-config.yaml \
+            pyproject.toml \
+            scripts/ \
             skills/ \
             README.md
           unzip -t /tmp/graph-sync-agent-kit.zip

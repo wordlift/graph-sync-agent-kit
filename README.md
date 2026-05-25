@@ -24,6 +24,10 @@ Each skill's `SKILL.md` is the authoritative reference for its capabilities.
 .claude-plugin/
   plugin.json
 
+scripts/
+  sync_versions.py
+  validate_agent_kit.py
+
 skills/
   graph-sync-curator/
   graph-sync-project/
@@ -34,6 +38,8 @@ skills/
 
 evals/
   prompts/
+
+pyproject.toml
 ```
 
 The `skills/` folders are the installable runtime units. The `evals/prompts/` files are maintainer fixtures for forward-testing skills and should not be installed as skills.
@@ -155,6 +161,23 @@ When running tools, prefer:
 
 The `evals/prompts/` directory contains maintainer prompt fixtures for forward-testing skills. Use them as test inputs, not runtime skill references.
 
+## Development
+
+`pyproject.toml` is the source of truth for the agent kit version. After changing `[project].version`, sync plugin manifests with:
+
+```bash
+python scripts/sync_versions.py
+```
+
+Install development tools and local commit hooks with:
+
+```bash
+uv sync --dev
+uv run pre-commit install
+```
+
+The pre-commit hooks sync `.codex-plugin/plugin.json` and `.claude-plugin/plugin.json` from `pyproject.toml`, then run the agent-kit validator.
+
 ## CI Validation
 
-Pull requests and pushes to `main` run the agent-kit validation workflow. It checks the Codex and Claude plugin manifests, required skill metadata, eval prompt fixtures, Claude Code plugin strict validation, and the release archive shape.
+Pull requests and pushes to `main` run the agent-kit validation workflow. It checks version consistency across `pyproject.toml` and plugin manifests, required skill metadata, eval prompt fixtures, Claude Code plugin strict validation, and the release archive shape. Release tags must match the `pyproject.toml` version.

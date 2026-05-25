@@ -7,6 +7,7 @@ import argparse
 import json
 import re
 import sys
+import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -70,11 +71,16 @@ CLAUDE_MANIFEST_FIELDS = {
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("root", nargs="?", default=".", help="Repository root")
+    parser.add_argument(
+        "--expected-version",
+        help="Expected project version, with or without a leading v.",
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
     errors: list[str] = []
 
+    validate_versions(root, normalize_version(args.expected_version), errors)
     validate_codex_plugin(root, errors)
     validate_claude_plugin(root, errors)
     validate_skills(root, errors)
@@ -88,6 +94,38 @@ def main() -> int:
 
     print(f"Agent kit validation passed: {root}")
     return 0
+
+
+def validate_versions(root: Path, expected_version: str | None, errors: list[str]) -> None:
+    project = load_toml(root / "pyproject.toml", errors)
+    codex = load_json(root / ".codex-plugin" / "plugin.json", errors)
+    claude = load_json(root / ".claude-plugin" / "plugin.json", errors)
+
+    project_version = None
+    if project is not None:
+        project_table = project.get("project")
+        if not isinstance(project_table, dict):
+            errors.append("pyproject.toml must define a [project] table")
+        else:
+            project_version = project_table.get("version")
+            if not is_valid_semver(project_version):
+                errors.append("pyproject.toml [project] `version` must be strict semver")
+
+    versions = {
+        "pyproject.toml": project_version,
+        ".codex-plugin/plugin.json": codex.get("version") if codex is not None else None,
+        ".claude-plugin/plugin.json": claude.get("version") if claude is not None else None,
+    }
+    comparable = {label: version for label, version in versions.items() if version is not None}
+    if len(set(comparable.values())) > 1:
+        rendered = ", ".join(f"{label}={version!r}" for label, version in comparable.items())
+        errors.append(f"version mismatch: {rendered}")
+
+    if expected_version is not None and project_version != expected_version:
+        errors.append(
+            f"release tag version {expected_version!r} does not match "
+            f"pyproject.toml version {project_version!r}"
+        )
 
 
 def validate_codex_plugin(root: Path, errors: list[str]) -> None:
@@ -246,6 +284,21 @@ def load_json(path: Path, errors: list[str]) -> dict[str, Any] | None:
     return payload
 
 
+def load_toml(path: Path, errors: list[str]) -> dict[str, Any] | None:
+    if not path.is_file():
+        errors.append(f"missing `{path}`")
+        return None
+    try:
+        payload = tomllib.loads(path.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError) as exc:
+        errors.append(f"`{path}` must be valid TOML: {exc}")
+        return None
+    if not isinstance(payload, dict):
+        errors.append(f"`{path}` must contain a TOML object")
+        return None
+    return payload
+
+
 def parse_frontmatter(contents: str, label: str, errors: list[str]) -> dict[str, Any] | None:
     if not contents.startswith("---\n"):
         errors.append(f"{label}: missing YAML frontmatter")
@@ -275,8 +328,18 @@ def validate_author(payload: dict[str, Any], label: str, errors: list[str]) -> N
 
 def validate_semver(payload: dict[str, Any], label: str, errors: list[str]) -> None:
     version = payload.get("version")
-    if not isinstance(version, str) or SEMVER_RE.fullmatch(version) is None:
+    if not is_valid_semver(version):
         errors.append(f"{label} field `version` must be strict semver")
+
+
+def is_valid_semver(value: Any) -> bool:
+    return isinstance(value, str) and SEMVER_RE.fullmatch(value) is not None
+
+
+def normalize_version(value: str | None) -> str | None:
+    if value is None:
+        return None
+    return value[1:] if value.startswith("v") else value
 
 
 def reject_unknown_fields(
