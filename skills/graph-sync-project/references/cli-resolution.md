@@ -8,7 +8,7 @@ This reference covers CLI runner resolution and command shape. For `worai.toml` 
 
 When a graph-sync CLI command is needed:
 
-1. Prefer the project-documented command from `AGENTS.md`, `README.md`, `docs/`, scripts, or workflow files.
+1. Prefer the project-documented command from `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/`, scripts, or workflow files.
 2. If the project pins a `worai_version` in `.github/workflows/graph-sync.yml`, reuse that version for local/ephemeral runs when practical.
 3. If `worai` is on `PATH`, run `worai version` or `worai --help` first to confirm it works.
 4. If the project explicitly provides `worai` in its local environment, use the project runner, for example `uv run worai ...`.

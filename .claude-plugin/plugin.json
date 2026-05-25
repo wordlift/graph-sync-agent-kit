@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "graph-sync-agent-kit",
+  "displayName": "Graph Sync Agent Kit",
+  "description": "Agent skills for WordLift graph-sync curation, project implementation, repository lifecycle, YARRRML review, postprocessor authoring, and GitHub workflow review.",
+  "version": "0.1.0",
+  "author": {
+    "name": "WordLift"
+  }
+}

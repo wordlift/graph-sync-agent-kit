@@ -1,8 +1,8 @@
 # Graph Sync Agent Kit
 
-Installable Codex skills and maintainer eval prompts for WordLift graph-sync projects.
+Installable agent skills and maintainer eval prompts for WordLift graph-sync projects.
 
-This repository contains reusable agent workflows that were extracted from graph-sync project specs and day-to-day implementation practice. The skills are intended to be installed into Codex environments and used across graph-sync project repositories.
+This repository contains reusable agent workflows that were extracted from graph-sync project specs and day-to-day implementation practice. The same `skills/` directory can be used by Claude Code as a plugin and by Codex as installed skills.
 
 ## Skill Inventory
 
@@ -18,6 +18,9 @@ Each skill's `SKILL.md` is the authoritative reference for its capabilities.
 ## Repository Layout
 
 ```text
+.claude-plugin/
+  plugin.json
+
 skills/
   graph-sync-curator/
   graph-sync-project/
@@ -34,13 +37,30 @@ The `skills/` folders are the installable runtime units. The `evals/prompts/` fi
 
 ## Installation
 
-Install skills from:
+Use the repository from:
 
 ```text
 git@github.com:wordlift/graph-sync-agent-kit.git
 ```
 
-### Codex-Assisted Install
+### Claude Code Plugin
+
+Clone the repository and load it as a Claude Code plugin:
+
+```bash
+git clone git@github.com:wordlift/graph-sync-agent-kit.git
+claude --plugin-dir ./graph-sync-agent-kit
+```
+
+When installed as a Claude Code plugin, invoke skills with the plugin namespace:
+
+```text
+/graph-sync-agent-kit:graph-sync-curator start the graph-sync workflow for www.example.org
+```
+
+For team distribution, publish or install this repository through a Claude Code plugin marketplace and pin releases/tags according to your rollout policy.
+
+### Codex Install
 
 Ask Codex to install every skill in this repository:
 
@@ -52,7 +72,7 @@ Install all skills in this kit. They are designed to work together: `graph-sync-
 
 Restart Codex after installing skills.
 
-### Manual Install
+### Manual Codex Install
 
 Clone the repository and copy all skill folders into Codex's skills directory:
 
@@ -67,87 +87,43 @@ Restart Codex after copying skills.
 
 ## Usage
 
-The prompts below are intentionally concrete. Replace `example.org`, repository URLs, profiles, and cluster names with the project you are working on.
+The prompts below are intentionally concrete. Replace `example.org`, repository URLs, profiles, and cluster names with the project you are working on. Claude Code plugin skills use `/graph-sync-agent-kit:<skill>`. Codex skills use `$<skill>`.
 
-### Start new project
+| Scenario | Claude Code plugin | Codex |
+| --- | --- | --- |
+| Start new project | `/graph-sync-agent-kit:graph-sync-curator start the graph-sync workflow for www.example.org` | `Use $graph-sync-curator to start the graph-sync workflow for www.example.org.` |
+| Continue current checkout | `/graph-sync-agent-kit:graph-sync-curator continue the graph-sync workflow for this existing project` | `Use $graph-sync-curator to continue the graph-sync workflow for this existing project.` |
+| Continue remote repository | `/graph-sync-agent-kit:graph-sync-curator continue the graph-sync workflow for git@github.com:wordlift/graph-sync-example-org.git` | `Use $graph-sync-curator to continue the graph-sync workflow for git@github.com:wordlift/graph-sync-example-org.git.` |
+| Create project repository | `/graph-sync-agent-kit:graph-sync-repo-lifecycle create a new graph-sync project for example.org from the WordLift graph-sync template. Use the project name graph-sync-example-org and prepare it for the first working session.` | `Use $graph-sync-repo-lifecycle to create a new graph-sync project for example.org from the WordLift graph-sync template. Use the project name graph-sync-example-org and prepare it for the first working session.` |
+| Clone and prepare an existing project | `/graph-sync-agent-kit:graph-sync-repo-lifecycle clone git@github.com:wordlift/graph-sync-example-org.git and prepare the checkout for work` | `Use $graph-sync-repo-lifecycle to clone git@github.com:wordlift/graph-sync-example-org.git and prepare the checkout for work.` |
+| Create static entities | `/graph-sync-agent-kit:graph-sync-curator create the static entities for example.org and propose the graph-sync project files that should represent them` | `Use $graph-sync-curator to create the static entities for example.org and propose the graph-sync project files that should represent them.` |
+| Parse sitemap and prioritize clusters | `/graph-sync-agent-kit:graph-sync-curator parse the sitemap for example.org and recommend the next content cluster to implement` | `Use $graph-sync-curator to parse the sitemap for example.org and recommend the next content cluster to implement.` |
+| Work on a content cluster | `/graph-sync-agent-kit:graph-sync-curator work on the product pages cluster for example.org and propose the graph-sync changes needed for that cluster` | `Use $graph-sync-curator to work on the product pages cluster for example.org and propose the graph-sync changes needed for that cluster.` |
+| Update project files safely | `/graph-sync-agent-kit:graph-sync-project implement the agreed product page mapping changes` | `Use $graph-sync-project to implement the agreed product page mapping changes.` |
+| Review a YARRRML mapping | `/graph-sync-agent-kit:graph-sync-yarrrml-review review the mapping for Product pages` | `Use $graph-sync-yarrrml-review to review the mapping for Product pages.` |
+| Author a postprocessor | `/graph-sync-agent-kit:graph-sync-postprocessor-authoring add a postprocessor that normalizes VideoObject relationships for example.org pages` | `Use $graph-sync-postprocessor-authoring to add a postprocessor that normalizes VideoObject relationships for example.org pages.` |
+| Review the GitHub workflow | `/graph-sync-agent-kit:graph-sync-github-workflow-review review the graph-sync GitHub Actions workflow` | `Use $graph-sync-github-workflow-review to review the graph-sync GitHub Actions workflow.` |
+| Close out a successful session | `/graph-sync-agent-kit:graph-sync-repo-lifecycle close out this graph-sync project session. The curation changes have been validated. Prepare a safe commit and ask before pushing.` | `Use $graph-sync-repo-lifecycle to close out this graph-sync project session. The curation changes have been validated. Prepare a safe commit and ask before pushing.` |
 
-```text
-Use $graph-sync-curator to start the graph-sync workflow for www.example.org.
+## Claude Code Safety
+
+Graph-sync projects often contain local API keys, service-account files, and sync artifacts. In project checkouts that use Claude Code, consider denying reads for local secret paths with `.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./.config/**)",
+      "Read(./secrets/**)",
+      "Read(./**/*service-account*.json)"
+    ]
+  }
+}
 ```
 
-### Continue an existing project
-
-```text
-Use $graph-sync-curator to continue the graph-sync workflow for this existing project.
-```
-
-```text
-Use $graph-sync-curator to continue the graph-sync workflow for git@github.com:wordlift/graph-sync-example-org.git.
-```
-
-### Create project repository
-
-```text
-Use $graph-sync-repo-lifecycle to create a new graph-sync project for example.org from the WordLift graph-sync template.
-
-Use the project name graph-sync-example-org and prepare it for the first working session.
-```
-
-### Clone and prepare an existing project
-
-```text
-Use $graph-sync-repo-lifecycle to clone git@github.com:wordlift/graph-sync-example-org.git and prepare the checkout for work.
-```
-
-### Create static entities
-
-```text
-Use $graph-sync-curator to create the static entities for example.org and propose the graph-sync project files that should represent them.
-```
-
-### Parse a sitemap and prioritize clusters
-
-```text
-Use $graph-sync-curator to parse the sitemap for example.org and recommend the next content cluster to implement.
-```
-
-### Work on a content cluster
-
-```text
-Use $graph-sync-curator to work on the product pages cluster for example.org and propose the graph-sync changes needed for that cluster.
-```
-
-### Update project files safely
-
-```text
-Use $graph-sync-project to implement the agreed product page mapping changes in this graph-sync project.
-```
-
-### Review a YARRRML mapping
-
-```text
-Use $graph-sync-yarrrml-review to review the mapping for Product pages.
-```
-
-### Author a postprocessor
-
-```text
-Use $graph-sync-postprocessor-authoring to add a postprocessor that normalizes VideoObject relationships for example.org pages.
-```
-
-### Review the GitHub workflow
-
-```text
-Use $graph-sync-github-workflow-review to review the graph-sync GitHub Actions workflow.
-```
-
-### Close out a successful session
-
-```text
-Use $graph-sync-repo-lifecycle to close out this graph-sync project session.
-
-The curation changes have been validated. Prepare a safe commit and ask before pushing.
-```
+Adjust the deny list to the project layout, and keep any machine-local Claude settings out of commits unless the project intentionally shares them.
 
 ## Tool Portability
 

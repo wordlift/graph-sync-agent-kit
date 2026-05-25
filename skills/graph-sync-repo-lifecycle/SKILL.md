@@ -70,7 +70,7 @@ For git operations:
 
 After cloning:
 
-- Read the project `AGENTS.md` or equivalent instructions.
+- Read the project `AGENTS.md`, `CLAUDE.md`, or equivalent instructions.
 - Inspect the repository shape before editing.
 - Run the project setup/validation command only when needed for the user's task.
 
@@ -121,7 +121,7 @@ Ask before installing or fetching packages, and report which runner was used.
 Before any commit or push:
 
 - Inspect changed and staged files before staging broadly.
-- Never stage `.env`, `.env.*` except intentional examples such as `.env.example`, `.codex/`, private keys, service-account JSON files, downloaded credentials, local provider configs, token dumps, or API response dumps.
+- Never stage `.env`, `.env.*` except intentional examples such as `.env.example`, `.codex/`, `.claude/settings.local.json`, private keys, service-account JSON files, downloaded credentials, local provider configs, token dumps, or API response dumps.
 - Review diffs and config files for inline secrets or sensitive headers, including `api_key`, `token`, `secret`, `password`, `Authorization`, `X-API-Key`, `http_headers`, and service-account blocks.
 - If a secret appears in a tracked or staged file, stop and ask how to proceed; do not quote the secret value back to the user.
 - Use a project-documented secret scanner when one exists; otherwise keep the check manual and focused on changed files.
@@ -130,7 +130,7 @@ Before any commit or push:
 
 - Do not push without explicit user confirmation.
 - Do not force push unless the user explicitly requests it.
-- Do not commit `.env`, credentials, private keys, `.codex/`, or local secret files.
+- Do not commit `.env`, credentials, private keys, `.codex/`, `.claude/settings.local.json`, or local secret files.
 - Prefer explicit file staging over blind `git add .` after editing sessions.
 - Report validation failures before committing.
 - If the worktree contains unrelated user changes, leave them alone and stage only the intended files.
