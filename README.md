@@ -6,18 +6,14 @@ This repository contains reusable agent workflows that were extracted from graph
 
 ## Skill Inventory
 
-- `graph-sync-curator`
-  - Day-to-day semantic curation workflow: static entities, sitemap clustering, content-cluster prioritization, schema.org modeling, FAQ/video/authorship extraction, real syncs, and validation loops.
-- `graph-sync-project`
-  - Technical project workflow: `worai.toml`, mappings, static templates, postprocessor runtime behavior, troubleshooting, CI smoke checks, docs/spec synchronization, and portable CLI resolution.
-- `graph-sync-repo-lifecycle`
-  - Repository lifecycle workflow: create projects from the template, clone existing projects, initialize git, validate changes, commit, and push after explicit user confirmation.
-- `graph-sync-yarrrml-review`
-  - Focused YARRRML/RML mapping review for selector correctness, route compatibility, Morph-KGC behavior, duplicate mappings, extraction robustness, and schema.org output quality.
-- `graph-sync-postprocessor-authoring`
-  - Custom postprocessor authoring and debugging workflow, including manifest behavior, SDK runner usage, context compatibility, and failure artifacts.
-- `graph-sync-github-workflow-review`
-  - GitHub Actions review workflow for profile dispatch, caching, pinned `worai_version`, reliability, runtime, and cost.
+- `graph-sync-curator` — day-to-day semantic curation; orchestrates the other skills end-to-end.
+- `graph-sync-project` — technical project edits: mappings, templates, postprocessors, CLI, and validation.
+- `graph-sync-repo-lifecycle` — repository setup, commit, and publish.
+- `graph-sync-yarrrml-review` — focused YARRRML/RML mapping review.
+- `graph-sync-postprocessor-authoring` — postprocessor authoring and debugging.
+- `graph-sync-github-workflow-review` — GitHub Actions workflow review.
+
+Each skill's `SKILL.md` is the authoritative reference for its capabilities.
 
 ## Repository Layout
 
@@ -165,27 +161,6 @@ When running tools, prefer:
 4. Pinned ephemeral runners such as `pipx run --spec ...` or `uvx --from ...`.
 5. Explicit user approval before installing or fetching packages.
 
-## Validation
-
-Validate each skill folder with the skill validator:
-
-```bash
-quick_validate.py skills/<skill-name>
-```
-
-The current scaffold has been validated for all six skill folders.
-
 ## Forward Testing
 
-Use the prompt fixtures under `evals/prompts/` to test realistic workflows:
-
-- `curator-static-entities.md`
-- `curator-sitemap-clusters.md`
-- `curator-content-cluster.md`
-- `repo-lifecycle-init.md`
-- `repo-lifecycle-closeout.md`
-- `yarrrml-review.md`
-- `postprocessor-authoring.md`
-- `github-workflow-review.md`
-
-Treat eval prompts as maintainer test inputs, not runtime skill references.
+The `evals/prompts/` directory contains maintainer prompt fixtures for forward-testing skills. Use them as test inputs, not runtime skill references.
