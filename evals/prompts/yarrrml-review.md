@@ -2,7 +2,38 @@
 
 Use `$graph-sync-yarrrml-review`.
 
-Review a graph-sync YARRRML mapping for correctness and maintainability.
+Review the following YARRRML mapping for `morganstanley.com` articles:
+
+```yaml
+prefixes:
+  schema: "https://schema.org/"
+  ms: "https://www.morganstanley.com/"
+
+mappings:
+  articles:
+    sources:
+      - [data.json~jsonpath, "$[*]"]
+    s: ms:ideas/$(slug)
+    po:
+      - [a, schema:Article]
+      - [schema:name, $(title)]
+      - [schema:datePublished, $(publishDate)]
+      - [schema:url, $(url)]
+      - [schema:author, $(author.name)]
+      - [schema:description, $(summary)]
+      - p: schema:image
+        o:
+          - mapping: articleImage
+  articleImage:
+    sources:
+      - [data.json~jsonpath, "$[*]"]
+    s: ms:ideas/$(slug)/image
+    po:
+      - [a, schema:ImageObject]
+      - [schema:url, $(image.src)]
+      - [schema:width, $(image.width)]
+      - [schema:height, $(image.height)]
+```
 
 Requirements:
 

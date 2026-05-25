@@ -2,7 +2,9 @@
 
 Use `$graph-sync-repo-lifecycle`.
 
-A graph-sync curation session has finished successfully. Prepare the repository for commit and push.
+A graph-sync curation session for `morganstanley.com` has finished successfully. Prepare the repository for commit and push.
+
+Context: the Articles cluster mapping has been added (`mappings/articles.yarrrml.yaml`), the static entities file updated (`static/entities.ttl`), and the postprocessor manifest updated (`postprocessors/manifest.yaml`). No `.env` file is present.
 
 Requirements:
 

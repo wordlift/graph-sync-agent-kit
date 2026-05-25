@@ -2,7 +2,9 @@
 
 Use `$graph-sync-curator`.
 
-Parse the sitemap for a graph-sync project and define content clusters.
+Parse the sitemap for `morganstanley.com` and define content clusters.
+
+Sitemap index: https://www.morganstanley.com/sitemap.xml
 
 Requirements:
 

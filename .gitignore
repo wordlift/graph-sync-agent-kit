@@ -25,3 +25,7 @@ Thumbs.db
 .coverage
 .pytest_cache/
 htmlcov/
+
+# Eval outputs and judgments
+evals/outputs/
+evals/judgments/

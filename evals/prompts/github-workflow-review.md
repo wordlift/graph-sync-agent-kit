@@ -2,7 +2,33 @@
 
 Use `$graph-sync-github-workflow-review`.
 
-Review a graph-sync GitHub Actions workflow for reliability, runtime, and cost.
+Review the following GitHub Actions workflow for `graph-sync-morganstanley-com`:
+
+```yaml
+name: Graph Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "Profile to run"
+        required: true
+        default: articles
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install worai
+        run: pip install worai
+
+      - name: Run graph sync
+        run: worai --config worai.toml graph sync run --profile ${{ github.event.inputs.profile }}
+        env:
+          WORDLIFT_KEY: ${{ secrets.WORDLIFT_KEY }}
+```
 
 Requirements:
 
