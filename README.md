@@ -2,7 +2,7 @@
 
 Installable agent skills and maintainer eval prompts for WordLift graph-sync projects.
 
-This repository contains reusable agent workflows that were extracted from graph-sync project specs and day-to-day implementation practice. The same `skills/` directory can be used by Claude Code as a plugin and by Codex as installed skills.
+This repository contains reusable agent workflows that were extracted from graph-sync project specs and day-to-day implementation practice. The same `skills/` directory can be packaged for Claude Code, packaged for Codex, or installed directly as Codex skills.
 
 ## Skill Inventory
 
@@ -18,6 +18,9 @@ Each skill's `SKILL.md` is the authoritative reference for its capabilities.
 ## Repository Layout
 
 ```text
+.codex-plugin/
+  plugin.json
+
 .claude-plugin/
   plugin.json
 
@@ -60,7 +63,18 @@ When installed as a Claude Code plugin, invoke skills with the plugin namespace:
 
 For team distribution, publish or install this repository through a Claude Code plugin marketplace and pin releases/tags according to your rollout policy.
 
-### Codex Install
+### Codex Plugin
+
+This repository includes `.codex-plugin/plugin.json` for Codex plugin packaging. Codex plugin installation is marketplace-based; once the plugin is published in a configured marketplace, install it with:
+
+```bash
+codex plugin marketplace add <marketplace-source> --ref v0.1.0
+codex plugin add graph-sync-agent-kit@<marketplace-name>
+```
+
+Start a new Codex thread after installing or updating the plugin so the skills are loaded. Until a marketplace package is published, use the Codex skill install path below for local testing.
+
+### Codex Skill Install
 
 Ask Codex to install every skill in this repository:
 

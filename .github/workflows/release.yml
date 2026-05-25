@@ -22,9 +22,13 @@ jobs:
           git merge-base --is-ancestor ${{ github.sha }} origin/main \
             || { echo "Tag ${{ github.ref_name }} is not on main — aborting."; exit 1; }
 
-      - name: Build skills archive
+      - name: Build agent kit archive
         run: |
-          zip -r graph-sync-agent-kit-${{ github.ref_name }}.zip skills/
+          zip -r graph-sync-agent-kit-${{ github.ref_name }}.zip \
+            .codex-plugin/ \
+            .claude-plugin/ \
+            skills/ \
+            README.md
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
