@@ -25,6 +25,7 @@ Check mappings for:
 - Extraction rules that generalize across pages in the configured source.
 - Required vs optional field handling: selective sources should prevent empty triples, while validation should flag missing required fields.
 - Canonicalizer-friendly IDs: dynamic subject IRIs should be simple staging IDs, and root entities should expose type, `schema:url`, and `schema:name`/`schema:headline`.
+- Postprocessor escalation: keep stable scalar fields in YARRRML, but flag rich text cleanup, nested FAQ/video nodes, API/XHR enrichment, deduplication, validation, or shared logic as postprocessor candidates.
 - Avoidance of hardcoded constants from sample pages.
 - Explicit IRIs and no blank nodes in emitted entities.
 - URL-valued schema properties as plain literals.

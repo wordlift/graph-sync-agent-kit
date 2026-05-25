@@ -37,6 +37,11 @@
 - Keep optional entity IRIs guarded by the source that proves the entity exists.
 - For creative works, treat authorship as expected unless the user accepts otherwise; missing authorship should be caught in validation and resolved with a better selector, another observed source, or an explicitly approved fallback.
 
+## Postprocessor Escalation
+- Use YARRRML for stable scalar extraction, simple repeatable fields, and entity skeletons.
+- Escalate to a postprocessor when extraction needs rich text cleanup, nested entity construction, API/XHR enrichment, deduplication, validation, or shared logic across pages.
+- Do not add a postprocessor just because XPath is possible; use one when the mapping output would otherwise be brittle, flattened, or hard to validate.
+
 ## Canonicalizer-Friendly IDs
 - Treat dynamic YARRRML subject IRIs as staging IDs; final entity IRIs are normalized by the canonical ID postprocessor.
 - Prefer simple staging subjects such as `__URL__`, `__URL__#article`, or `__URL__#<entity>` over canonical-link XPath expressions.

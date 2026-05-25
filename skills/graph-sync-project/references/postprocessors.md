@@ -28,6 +28,11 @@
   - `enabled`
   - `keep_temp_on_error`
 
+## When To Use A Postprocessor
+- Prefer mappings for stable scalar extraction and entity skeletons.
+- Use a postprocessor for rich text cleanup, nested entities such as FAQ `Question`/`Answer` or `VideoObject`, API/XHR enrichment, deduplication, validation, or reusable logic across pages.
+- Keep postprocessors focused and deterministic; avoid mixing unrelated transformations in one class.
+
 ## Context Passed To Postprocessors
 - `profile_name`
 - `url`
