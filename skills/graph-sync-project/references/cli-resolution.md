@@ -2,6 +2,8 @@
 
 Use this reference before running graph-sync CLI commands from a skill. Do not assume `worai` is globally installed.
 
+This reference covers CLI runner resolution and command shape. For `worai.toml` config semantics, check the project `wordlift-sdk` version as described in `references/overview.md`.
+
 ## Resolution Order
 
 When a graph-sync CLI command is needed:

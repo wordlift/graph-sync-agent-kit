@@ -12,6 +12,8 @@
   - `ingest_source` (`urls|sitemap|sheets`)
   - `ingest_loader`
   - optional `ingest_timeout_ms`
+- Treat `wordlift-sdk` as the source of truth for supported `worai.toml` profile/config keys. Check `pyproject.toml`, `uv.lock`, or the active environment before assuming config semantics.
+- Treat `worai` primarily as the graph-sync command runner; verify its command shape separately through `references/cli-resolution.md`.
 - Current template baseline is `wordlift-sdk>=8.2.1,<9.0.0`.
 - Generated GitHub Actions workflow keeps `wordlift/graph-sync@v6` and pins the `worai` binary through `worai_version`.
 
