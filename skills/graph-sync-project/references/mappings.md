@@ -17,6 +17,8 @@
 - Fallback behavior:
   - if no routes are defined, runtime behaves as implicit `pattern = ".*"` with `mapping`
   - if routes exist without `pattern = ".*"`, runtime appends that fallback
+- Prefer no-op fallback mappings for unhandled URLs unless the project explicitly wants generic fallback output.
+- Do not let fallback mappings emit generic `WebPage` entities as a substitute for content-cluster modeling.
 
 ## Mapping Path And Template Resolution
 - Selected mapping path:

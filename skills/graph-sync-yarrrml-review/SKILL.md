@@ -18,6 +18,7 @@ Check mappings for:
 - Relative XPath selectors.
 - No duplicate mappings.
 - Route/fallback compatibility with the active profile.
+- Fallback output policy: catch-all/default mappings should not emit generic `WebPage` entities unless explicitly intended.
 - Template variant expectations for `.j2`, `.liquid`, or plain mapping files.
 - Morph-KGC compatibility.
 - Clear, minimal mapping rules.
