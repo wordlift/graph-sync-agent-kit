@@ -34,3 +34,8 @@
 - Use root/page-level iterators only for triples guaranteed by the page contract, such as the primary entity skeleton.
 - Keep optional entity IRIs guarded by the source that proves the entity exists.
 - For creative works, treat authorship as expected unless the user accepts otherwise; missing authorship should be caught in validation and resolved with a better selector, another observed source, or an explicitly approved fallback.
+
+## Canonicalizer-Friendly IDs
+- Treat dynamic YARRRML subject IRIs as staging IDs; final entity IRIs are normalized by the canonical ID postprocessor.
+- Prefer simple staging subjects such as `__URL__`, `__URL__#article`, or `__URL__#<entity>` over canonical-link XPath expressions.
+- Ensure each root entity has a useful schema.org type, `schema:url`, and `schema:name`/`schema:headline`, because these feed canonical ID generation.

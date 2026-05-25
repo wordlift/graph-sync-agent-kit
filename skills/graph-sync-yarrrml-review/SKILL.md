@@ -23,6 +23,7 @@ Check mappings for:
 - Clear, minimal mapping rules.
 - Extraction rules that generalize across pages in the configured source.
 - Required vs optional field handling: selective sources should prevent empty triples, while validation should flag missing required fields.
+- Canonicalizer-friendly IDs: dynamic subject IRIs should be simple staging IDs, and root entities should expose type, `schema:url`, and `schema:name`/`schema:headline`.
 - Avoidance of hardcoded constants from sample pages.
 - Explicit IRIs and no blank nodes in emitted entities.
 - URL-valued schema properties as plain literals.
