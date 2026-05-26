@@ -45,3 +45,66 @@ jobs:
         with:
           files: graph-sync-agent-kit-${{ github.ref_name }}.zip
           generate_release_notes: true
+
+  update-marketplace:
+    runs-on: ubuntu-latest
+    needs: release
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      MARKETPLACE_OWNER: wordlift
+      MARKETPLACE_REPOSITORY: agent-marketplace
+      MARKETPLACE_REPO: wordlift/agent-marketplace
+      MARKETPLACE_BRANCH: main
+
+    steps:
+      - name: Create marketplace app token
+        id: marketplace-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.AGENT_MARKETPLACE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.AGENT_MARKETPLACE_APP_PRIVATE_KEY }}
+          owner: ${{ env.MARKETPLACE_OWNER }}
+          repositories: ${{ env.MARKETPLACE_REPOSITORY }}
+          permission-contents: write
+
+      - name: Checkout agent kit
+        uses: actions/checkout@v4
+        with:
+          path: agent-kit
+
+      - name: Checkout agent marketplace
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.MARKETPLACE_REPO }}
+          ref: ${{ env.MARKETPLACE_BRANCH }}
+          token: ${{ steps.marketplace-token.outputs.token }}
+          path: agent-marketplace
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Update marketplace plugin refs
+        run: |
+          python agent-kit/scripts/update_agent_marketplace.py \
+            --marketplace-root agent-marketplace \
+            --ref "${{ github.ref_name }}"
+
+      - name: Validate marketplace metadata
+        run: python agent-marketplace/scripts/validate_marketplace.py agent-marketplace
+
+      - name: Commit marketplace update
+        working-directory: agent-marketplace
+        run: |
+          if git diff --quiet; then
+            echo "Marketplace already points at ${{ github.ref_name }}."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .agents/plugins/marketplace.json .claude-plugin/marketplace.json
+          git commit -m "chore: update graph-sync-agent-kit to ${{ github.ref_name }}"
+          git push origin HEAD:${{ env.MARKETPLACE_BRANCH }}

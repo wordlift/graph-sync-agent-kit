@@ -54,7 +54,14 @@ git@github.com:wordlift/graph-sync-agent-kit.git
 
 ### Claude Code Plugin
 
-Clone the repository and load it as a Claude Code plugin:
+Install through the WordLift agent marketplace:
+
+```bash
+claude plugin marketplace add wordlift/agent-marketplace
+claude plugin install graph-sync-agent-kit@wordlift
+```
+
+For local development, clone the repository and load it directly:
 
 ```bash
 git clone git@github.com:wordlift/graph-sync-agent-kit.git
@@ -67,18 +74,16 @@ When installed as a Claude Code plugin, invoke skills with the plugin namespace:
 /graph-sync-agent-kit:graph-sync-curator start the graph-sync workflow for www.example.org
 ```
 
-For team distribution, publish or install this repository through a Claude Code plugin marketplace and pin releases/tags according to your rollout policy.
-
 ### Codex Plugin
 
-This repository includes `.codex-plugin/plugin.json` for Codex plugin packaging. Codex plugin installation is marketplace-based; once the plugin is published in a configured marketplace, install it with:
+Install through the WordLift agent marketplace:
 
 ```bash
-codex plugin marketplace add <marketplace-source> --ref v0.1.0
-codex plugin add graph-sync-agent-kit@<marketplace-name>
+codex plugin marketplace add wordlift/agent-marketplace --ref main
+codex plugin add graph-sync-agent-kit@wordlift
 ```
 
-Start a new Codex thread after installing or updating the plugin so the skills are loaded. Until a marketplace package is published, use the Codex skill install path below for local testing.
+The marketplace points Codex at this repository as the Git-backed plugin source. Start a new Codex thread after installing or updating the plugin so the skills are loaded.
 
 ### Codex Skill Install
 
@@ -181,3 +186,14 @@ The pre-commit hooks sync `.codex-plugin/plugin.json` and `.claude-plugin/plugin
 ## CI Validation
 
 Pull requests and pushes to `main` run the agent-kit validation workflow. It checks version consistency across `pyproject.toml` and plugin manifests, required skill metadata, eval prompt fixtures, Claude Code plugin strict validation, and the release archive shape. Release tags must match the `pyproject.toml` version.
+
+## Marketplace Publication
+
+Publishing a release tag creates the GitHub release archive and updates `wordlift/agent-marketplace` so both Codex and Claude Code install the new tag.
+
+The release workflow uses a GitHub App installation token to push the marketplace update. Create a GitHub App installed on `wordlift/agent-marketplace` with repository Contents read/write permission, then configure these values in `graph-sync-agent-kit`:
+
+- Repository variable `AGENT_MARKETPLACE_APP_CLIENT_ID`: the GitHub App client ID.
+- Repository secret `AGENT_MARKETPLACE_APP_PRIVATE_KEY`: the full PEM private key for the GitHub App.
+
+The app installation should be restricted to `wordlift/agent-marketplace` unless it needs to publish additional plugins.
