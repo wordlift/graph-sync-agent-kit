@@ -61,6 +61,12 @@ claude plugin marketplace add wordlift/agent-marketplace
 claude plugin install graph-sync-agent-kit@wordlift
 ```
 
+Update an installed plugin after a new marketplace release:
+
+```bash
+claude plugin update graph-sync-agent-kit@wordlift
+```
+
 For local development, clone the repository and load it directly:
 
 ```bash
@@ -80,6 +86,13 @@ Install through the WordLift agent marketplace:
 
 ```bash
 codex plugin marketplace add wordlift/agent-marketplace --ref main
+codex plugin add graph-sync-agent-kit@wordlift
+```
+
+Update an installed plugin after a new marketplace release:
+
+```bash
+codex plugin marketplace upgrade wordlift
 codex plugin add graph-sync-agent-kit@wordlift
 ```
 
