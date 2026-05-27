@@ -19,17 +19,37 @@ Ask for or infer:
 - Destination directory.
 - Whether to trust the Copier template.
 - Whether to initialize git and create the first commit.
+- Source type (`sitemap`, `urls`, or `google_sheets`) and the matching source value.
+- WordLift API key handling: always scaffold with `CHANGE_ME` and API-key validation disabled, then tell the user to replace it immediately after Copier finishes.
+- For the chosen source type, every required Copier field. Do not pass `source_type` without its matching required data.
 
 Default command shape:
 
 ```bash
-pipx run copier copy gh:wordlift/graph-sync-template <project-name> --trust
+pipx run copier copy --trust --defaults \
+  --data source_type=sitemap \
+  --data sitemap_url=https://www.example.org/sitemap.xml \
+  --data api_key=CHANGE_ME \
+  --data validate_api_key=false \
+  gh:wordlift/graph-sync-template <project-name>
 cd <project-name>
 git init .
 git status
 git add .
 git commit -m "initial commit"
 ```
+
+Prefer non-interactive Copier execution. Codex shell commands may not provide an interactive TTY for Copier prompts, and template prompting can fail with stdin errors. Use `--defaults` together with explicit `--data` values; `--data` by itself does not suppress prompts. Put Copier switches before the template source and destination for clarity. Do not run bare `copier copy ...` for a new graph-sync project unless an interactive terminal is known to be available.
+
+For non-interactive template data:
+
+- Always provide the required fields for the selected source type in the same Copier command. If a required value is unknown but the user wants a scaffold, use an obvious placeholder and warn that it must be replaced before real syncs.
+- For `sitemap`, provide `sitemap_url`. When the domain is known and no sitemap was supplied, use the conventional placeholder `https://<domain>/sitemap.xml`.
+- For `urls`, provide `urls` as a non-empty YAML/JSON list. When no URLs were supplied but the domain is known, seed it with the homepage, for example `--data source_type=urls --data 'urls=["https://www.example.org/"]'`.
+- For `google_sheets`, provide `sheets_url`, `sheets_name`, and `sheets_service_account`. Use real values only when the user provided them through a safe local path or environment variable. For scaffold-only generation, use obvious placeholders such as `sheets_url=https://docs.google.com/spreadsheets/d/CHANGE_ME/edit`, `sheets_name=Sheet1`, and `sheets_service_account=.secrets/google-service-account.json`, then warn that the project cannot run until those values are replaced.
+- Always use `--data api_key=CHANGE_ME --data validate_api_key=false` during Copier generation. Immediately after Copier finishes, tell the user where the placeholder was written and ask them to replace `CHANGE_ME` with a real WordLift API key before any sync, validation, or first commit.
+- Do not ask the user to paste secrets into chat, do not echo secret values back, and avoid putting real secrets in command examples, git diffs, shell history, or committed files.
+- Avoid adding real API keys, service-account JSON, or generated `.env` files to the first commit.
 
 Resolve project-generation tools in this order:
 
