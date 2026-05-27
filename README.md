@@ -143,6 +143,8 @@ The prompts below are intentionally concrete. Replace `example.org`, repository 
 | Review the GitHub workflow | `/graph-sync-agent-kit:graph-sync-github-workflow-review review the graph-sync GitHub Actions workflow` | `Use $graph-sync-github-workflow-review to review the graph-sync GitHub Actions workflow.` |
 | Close out a successful session | `/graph-sync-agent-kit:graph-sync-repo-lifecycle close out this graph-sync project session. The curation changes have been validated. Prepare a safe commit and ask before pushing.` | `Use $graph-sync-repo-lifecycle to close out this graph-sync project session. The curation changes have been validated. Prepare a safe commit and ask before pushing.` |
 
+For the "Start new project" prompt, `graph-sync-curator` should first check whether the current directory is already a graph-sync checkout. In an empty or uninitialized directory, it should coordinate with `graph-sync-repo-lifecycle` to create the project from the WordLift template before starting static entity curation.
+
 ## Claude Code Safety
 
 Graph-sync projects often contain local API keys, service-account files, and sync artifacts. In project checkouts that use Claude Code, consider denying reads for local secret paths with `.claude/settings.json`:

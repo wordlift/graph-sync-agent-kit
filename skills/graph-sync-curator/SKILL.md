@@ -9,11 +9,22 @@ description: "Semantic curation workflow for WordLift graph-sync projects. Use w
 
 Use this skill to drive the day-to-day semantic curation workflow for WordLift graph-sync projects. Treat it as the primary practitioner workflow for moving from a target domain to static entities, sitemap clusters, dynamic mappings, real syncs, and validation loops.
 
-Use `graph-sync-project` when curation decisions become concrete project edits. Use `graph-sync-repo-lifecycle` when tested work should be committed or pushed.
+Use `graph-sync-project` when curation decisions become concrete project edits. Use `graph-sync-repo-lifecycle` when a project must be created, cloned, prepared, committed, or pushed.
 
 If the user asks for a full journey from project creation, repository URL, or existing checkout through curation and publishing, treat this skill as the orchestrator: coordinate with `graph-sync-repo-lifecycle` for repository setup and publishing, use `graph-sync-project` for implementation/runtime edits, and keep semantic decisions in this curator workflow.
 
 ## Workflow
+
+### 0. Establish project context
+
+Before researching static entities or creating project files, determine whether the current workspace is ready for graph-sync work.
+
+- Inspect the current directory for graph-sync project markers such as `worai.toml`, `profiles/`, mapping files, static template directories, `pyproject.toml`, `AGENTS.md`, or an initialized `.git/` repository.
+- If the user says "start the graph-sync workflow" for a domain and the current directory is empty or does not contain graph-sync project markers, first coordinate with `graph-sync-repo-lifecycle` to create a new project from the WordLift graph-sync template.
+- Infer a conservative project name from the domain when the user did not provide one, for example `graph-sync-example-org` for `www.example.org`.
+- Ask only for details that cannot be inferred safely, such as whether to trust the Copier template or whether to initialize git and create the first commit.
+- Do not start writing static entities, mappings, templates, or curation notes into an uninitialized directory.
+- After the repository exists and the checkout has been inspected, continue with static entities in this curator workflow.
 
 ### 1. Create static entities
 
