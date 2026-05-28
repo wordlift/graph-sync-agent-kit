@@ -145,6 +145,8 @@ The prompts below are intentionally concrete. Replace `example.org`, repository 
 
 For the "Start new project" prompt, `graph-sync-curator` should first check whether the current directory is already a graph-sync checkout. In an empty or uninitialized directory, it should coordinate with `graph-sync-repo-lifecycle` to create the project from the WordLift template before starting static entity curation.
 
+For "Continue current checkout", "Continue remote repository", and "Clone and prepare an existing project", the lifecycle flow should also check local API-key readiness before any graph-sync command or real sync. It should look for a project-root `.env` without printing secret values, reuse or copy an existing local `.env` only with user approval, and otherwise ask the user to provide the WordLift API key through a local-only path such as editing `.env` or exporting an environment variable.
+
 ## Claude Code Safety
 
 Graph-sync projects often contain local API keys, service-account files, and sync artifacts. In project checkouts that use Claude Code, consider denying reads for local secret paths with `.claude/settings.json`:

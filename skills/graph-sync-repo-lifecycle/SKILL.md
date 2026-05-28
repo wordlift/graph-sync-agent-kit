@@ -73,6 +73,7 @@ Ask for or infer:
 - Repository URL.
 - Destination directory.
 - Branch, if not the default branch.
+- Source directory, when resuming from an existing local folder rather than cloning.
 
 Default command shape:
 
@@ -92,6 +93,12 @@ After cloning:
 
 - Read the project `AGENTS.md`, `CLAUDE.md`, or equivalent instructions.
 - Inspect the repository shape before editing.
+- Check API-key readiness before running graph-sync commands, validation, or real syncs:
+  - Look for a project-root `.env` without printing its contents; use existence/non-empty checks and quiet key-name checks only.
+  - When resuming from a local source directory, check whether that source directory already has a `.env`; if it does, ask before copying it into the working checkout, keep it untracked, and never echo the secret value.
+  - If no usable `.env` exists, ask the user to provide the WordLift API key through a local-only path, such as editing `.env`, exporting an environment variable in their shell, or pointing to an existing local secret file. Do not ask them to paste the key into chat.
+  - When creating `.env`, prefer copying `.env.example` if present; otherwise create the smallest local placeholder the project expects and tell the user exactly which placeholder must be replaced before syncs.
+  - Verify `.env` and `.env.*` are ignored before any commit or push.
 - Run the project setup/validation command only when needed for the user's task.
 
 ## Session Closeout

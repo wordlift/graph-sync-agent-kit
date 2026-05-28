@@ -24,7 +24,7 @@ Before researching static entities or creating project files, determine whether 
 - Infer a conservative project name from the domain when the user did not provide one, for example `graph-sync-example-org` for `www.example.org`.
 - Ask only for details that cannot be inferred safely, such as whether to trust the Copier template or whether to initialize git and create the first commit.
 - Do not start writing static entities, mappings, templates, or curation notes into an uninitialized directory.
-- After the repository exists and the checkout has been inspected, continue with static entities in this curator workflow.
+- After the repository exists, the checkout has been inspected, and local API-key readiness has been checked through `graph-sync-repo-lifecycle`, continue with static entities in this curator workflow.
 
 ### 1. Create static entities
 
