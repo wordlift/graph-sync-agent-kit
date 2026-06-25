@@ -37,7 +37,7 @@ Operational rules for this project.
 - When possible, add collection page markup with list items that link to related URLs.
 - Keep `ItemList` entities inside the hierarchy of the owning page or entity.
 - Treat `worai.toml` as the authoritative runtime configuration.
-- Store graph exports, production graph snapshots, validation/audit artifacts, KPI reports, and other local investigation artifacts under `.private/`.
+- Store graph exports, production graph snapshots, validation/audit artifacts, KPI reports, and other local investigation artifacts under `output/`.
 - Keep docs, indexes, examples, changelogs, and TODOs in sync when behavior contracts change.
 - Validate structured data changes before graph sync runs.
 - For parallel, bounded QA/review delegations, use subagents only when the user or environment explicitly permits delegation.
@@ -59,7 +59,7 @@ Operational rules for this project.
 - Do not publish `Question` or `Answer` nodes when content is empty or equals `None`.
 - Do not derive page-level `schema:url` from canonical tags or Open Graph meta tags when a runtime URL value is available.
 - Do not relate entities to the web page canonical URL.
-- DO NOT hardcode the dataset URI; use provided placeholders or runtime context.
+- Do not hardcode the dataset URI; use provided placeholders or runtime context.
 - Do not use generic `WebPage` markup when a more specific grounded type is available.
 - Do not use `CreativeWork` when a more specific grounded Schema.org type applies.
 - Do not invent Schema.org types or properties.
