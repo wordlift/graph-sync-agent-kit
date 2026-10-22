@@ -5,7 +5,7 @@ repos:
         name: Sync plugin manifest versions
         entry: uv run python scripts/sync_versions.py
         language: system
-        files: '^(pyproject\.toml|\.codex-plugin/plugin\.json|\.claude-plugin/plugin\.json)$'
+        files: '^(pyproject\.toml|\.codex-plugin/plugin\.json|\.claude-plugin/plugin\.json|gemini-extension\.json)$'
         pass_filenames: false
 
       - id: validate-agent-kit

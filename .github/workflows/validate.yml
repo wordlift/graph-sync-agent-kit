@@ -65,6 +65,7 @@ jobs:
           zip -r /tmp/graph-sync-agent-kit.zip \
             .codex-plugin/ \
             .claude-plugin/ \
+            gemini-extension.json \
             .pre-commit-config.yaml \
             pyproject.toml \
             scripts/ \

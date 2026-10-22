@@ -14,6 +14,7 @@ from typing import Any
 MANIFEST_PATHS = (
     Path(".codex-plugin/plugin.json"),
     Path(".claude-plugin/plugin.json"),
+    Path("gemini-extension.json"),
 )
 
 

@@ -33,6 +33,13 @@ Create or review:
   - Role/title and organization relationship.
   - Official sameAs links only when validated.
 
+- Parent company
+  - When the brand belongs to a group, model the group as a second `Organization` and link it with `schema:parentOrganization`. Sibling brands of one group use the same parent name, URL and `sameAs`.
+
+## Homepage
+
+The API link looks the homepage up as `https://host/` (with the trailing slash), while the crawler reports it without one. Give the `Organization` and `WebSite` a hand-written `schema:url` with the slash and keep the homepage out of every profile's source (`graph-sync-project` `references/static-templates.md`).
+
 ## Modeling Rules
 
 - Do not use blank nodes.
