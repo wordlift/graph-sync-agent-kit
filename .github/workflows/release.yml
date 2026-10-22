@@ -29,11 +29,14 @@ jobs:
           git merge-base --is-ancestor ${{ github.sha }} origin/main \
             || { echo "Tag ${{ github.ref_name }} is not on main — aborting."; exit 1; }
 
+      # Gemini CLI installs a GitHub extension from its release's only asset,
+      # so the archive keeps gemini-extension.json and skills/ at its root.
       - name: Build agent kit archive
         run: |
           zip -r graph-sync-agent-kit-${{ github.ref_name }}.zip \
             .codex-plugin/ \
             .claude-plugin/ \
+            gemini-extension.json \
             .pre-commit-config.yaml \
             pyproject.toml \
             scripts/ \

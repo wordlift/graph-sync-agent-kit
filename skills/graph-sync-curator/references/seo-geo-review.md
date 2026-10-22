@@ -4,7 +4,7 @@ Use this lens to review semantic quality for search visibility and generative en
 
 ## SEO Focus
 
-- Prefer specific schema.org types over generic `WebPage`.
+- Use the most specific schema.org type; never plain `WebPage`, which earns no rich result.
 - Check rich-result and snippet opportunities.
 - Confirm page intent, entity type, and structured data output are consistent.
 - Check that required and recommended properties are present where practical.

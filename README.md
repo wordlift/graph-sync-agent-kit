@@ -2,7 +2,7 @@
 
 Installable agent skills and maintainer eval prompts for WordLift graph-sync projects.
 
-This repository contains reusable agent workflows that were extracted from graph-sync project specs and day-to-day implementation practice. The same `skills/` directory can be packaged for Claude Code, packaged for Codex, or installed directly as Codex skills.
+This repository contains reusable agent workflows that were extracted from graph-sync project specs and day-to-day implementation practice. The same `skills/` directory is packaged as a Claude Code plugin, a Codex plugin and a Gemini CLI extension, or can be copied into any agent's skills folder.
 
 ## Skill Inventory
 
@@ -24,13 +24,15 @@ Each skill's `SKILL.md` is the authoritative reference for its capabilities.
 .claude-plugin/
   plugin.json
 
+gemini-extension.json
+
 scripts/
   sync_versions.py
   validate_agent_kit.py
 
 skills/
   graph-sync-curator/
-  graph-sync-project/
+  graph-sync-project/          # includes scripts/fetch_page.py and scripts/kg_check.py
   graph-sync-repo-lifecycle/
   graph-sync-yarrrml-review/
   graph-sync-postprocessor-authoring/
@@ -98,6 +100,22 @@ codex plugin add graph-sync-agent-kit@wordlift
 
 The marketplace points Codex at this repository as the Git-backed plugin source. Start a new Codex thread after installing or updating the plugin so the skills are loaded.
 
+### Gemini CLI Extension
+
+Gemini CLI installs the kit as an extension straight from this repository (from the archive of its latest release):
+
+```bash
+gemini extensions install https://github.com/wordlift/graph-sync-agent-kit
+```
+
+Update after a new release:
+
+```bash
+gemini extensions update graph-sync-agent-kit
+```
+
+Restart Gemini CLI after installing or updating. The same commands work in wordlift-cli, which is built on Gemini CLI, with `wordlift-cli` in place of `gemini`.
+
 ### Codex Skill Install
 
 Ask Codex to install every skill in this repository:
@@ -110,18 +128,33 @@ Install all skills in this kit. They are designed to work together: `graph-sync-
 
 Restart Codex after installing skills.
 
-### Manual Codex Install
+### Manual Install (Claude Code, Codex, Gemini CLI)
 
-Clone the repository and copy all skill folders into Codex's skills directory:
+Every agent reads skills from a folder in your home directory. Copy all six `graph-sync-*` folders there, side by side (the skills refer to each other's files):
+
+| Agent | macOS / Linux | Windows |
+| --- | --- | --- |
+| Claude Code | `~/.claude/skills/` | `%USERPROFILE%\.claude\skills\` |
+| Codex | `~/.codex/skills/` (or `$CODEX_HOME/skills/`) | `%USERPROFILE%\.codex\skills\` |
+| Gemini CLI | `~/.gemini/skills/` | `%USERPROFILE%\.gemini\skills\` |
+
+macOS / Linux (example for Codex; change the folder for another agent):
 
 ```bash
-git clone git@github.com:wordlift/graph-sync-agent-kit.git
-cd graph-sync-agent-kit
+git clone https://github.com/wordlift/graph-sync-agent-kit.git
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-cp -R skills/graph-sync-* "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R graph-sync-agent-kit/skills/graph-sync-* "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
-Restart Codex after copying skills.
+Windows PowerShell (example for Gemini CLI; change `.gemini` to `.claude` or `.codex` for another agent):
+
+```powershell
+git clone https://github.com/wordlift/graph-sync-agent-kit.git
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.gemini\skills" | Out-Null
+Copy-Item -Recurse -Force graph-sync-agent-kit\skills\graph-sync-* "$env:USERPROFILE\.gemini\skills\"
+```
+
+Restart the agent after copying. To update later, run `git pull` in `graph-sync-agent-kit` and copy again.
 
 ## Usage
 
@@ -143,9 +176,51 @@ The prompts below are intentionally concrete. Replace `example.org`, repository 
 | Review the GitHub workflow | `/graph-sync-agent-kit:graph-sync-github-workflow-review review the graph-sync GitHub Actions workflow` | `Use $graph-sync-github-workflow-review to review the graph-sync GitHub Actions workflow.` |
 | Close out a successful session | `/graph-sync-agent-kit:graph-sync-repo-lifecycle close out this graph-sync project session. The curation changes have been validated. Prepare a safe commit and ask before pushing.` | `Use $graph-sync-repo-lifecycle to close out this graph-sync project session. The curation changes have been validated. Prepare a safe commit and ask before pushing.` |
 
+With a manual install, skills are invoked by name in plain language in every agent: `Use the graph-sync-curator skill to …`.
+
+More scenarios, same pattern:
+
+- `Use the graph-sync-curator skill to get this project ready on my computer and tell me what it covers.`
+- `Use the graph-sync-curator skill to run the sync for the products profile.`
+- `Use the graph-sync-project skill to check what the knowledge graph holds for https://www.example.org/some-page.`
+- `Use the graph-sync-project skill to find the cheapest crawler mode for https://www.example.org/some-page.`
+
 For the "Start new project" prompt, `graph-sync-curator` should first check whether the current directory is already a graph-sync checkout. In an empty or uninitialized directory, it should coordinate with `graph-sync-repo-lifecycle` to create the project from the WordLift template before starting static entity curation.
 
 For "Continue current checkout", "Continue remote repository", and "Clone and prepare an existing project", the lifecycle flow should also check local API-key readiness before any graph-sync command or real sync. It should look for a project-root `.env` without printing secret values, reuse or copy an existing local `.env` only with user approval, and otherwise ask the user to provide the WordLift API key through a local-only path such as editing `.env` or exporting an environment variable.
+
+## Quick Start For Customer Success
+
+For WordLift team members who work on client graph-sync projects without a developer background. The agent does the technical work; you describe what the client needs and check the results.
+
+### Once Per Computer
+
+1. Install **Git** (<https://git-scm.com/downloads>).
+2. Install **uv**, which brings the right Python by itself:
+   - Windows PowerShell: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+   - macOS / Linux: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+3. Install your AI agent (Claude Code, Codex or Gemini CLI) and the skills (Manual Install above). WordLift team members also install the `wordlift-kg` skill from WordLift's internal skills repository, the same way: it checks the knowledge graph a sync writes to.
+
+### Work On A Client Project
+
+1. Get access to the project's GitHub repository, then clone it: `git clone https://github.com/wordlift/graph-sync-<client>.git`.
+2. Open a terminal in that folder and start your agent there.
+3. Ask: `Use the graph-sync-curator skill to get this project ready on my computer and tell me what it covers.` The agent installs what the project needs and creates the `.env` file; it asks you to paste the client's WordLift API key **into that file**, never into the chat.
+4. Ask for what you need in plain words: which pages, what they should show, what looks wrong.
+
+### Before Every Sync
+
+- **A sync writes straight into the knowledge graph of the account whose key is in `.env`**, usually the client's live graph. There is no dry run. The agent names the account before every sync and waits for your yes.
+- To experiment safely, create a temporary account in the WordLift management console, set its **Website URL to the site you are syncing**, and give the agent that account's key instead.
+- Use only the graph-sync project to write to a graph-sync account. Other tools that write entities create them under different identifiers, so the same page ends up with duplicates.
+
+### What Only The Tech Team Can Do
+
+The agent stops and writes you a message to forward when a task needs:
+
+- **A Google Sheets service-account file.** Projects that read their pages from a Google Sheet need their own credentials file, which is never in the repository. Google shows a key only once, so the tech team may have to create a new one.
+- GitHub repository secrets, or scheduling a new profile in the graph-sync orchestrator.
+- A fix inside `worai` or the WordLift SDK.
 
 ## Claude Code Safety
 

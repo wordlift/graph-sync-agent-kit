@@ -24,6 +24,9 @@ SEMVER_RE = re.compile(
 
 HEX_COLOR_RE = re.compile(r"^#[0-9A-Fa-f]{6}$")
 
+# Gemini CLI refuses any other extension name.
+GEMINI_NAME_RE = re.compile(r"^[a-zA-Z0-9-]+$")
+
 CODEX_MANIFEST_FIELDS = {
     "id",
     "name",
@@ -67,6 +70,12 @@ CLAUDE_MANIFEST_FIELDS = {
     "author",
 }
 
+GEMINI_MANIFEST_FIELDS = {
+    "name",
+    "version",
+    "description",
+}
+
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -83,6 +92,7 @@ def main() -> int:
     validate_versions(root, normalize_version(args.expected_version), errors)
     validate_codex_plugin(root, errors)
     validate_claude_plugin(root, errors)
+    validate_gemini_extension(root, errors)
     validate_skills(root, errors)
     validate_eval_prompts(root, errors)
 
@@ -100,6 +110,7 @@ def validate_versions(root: Path, expected_version: str | None, errors: list[str
     project = load_toml(root / "pyproject.toml", errors)
     codex = load_json(root / ".codex-plugin" / "plugin.json", errors)
     claude = load_json(root / ".claude-plugin" / "plugin.json", errors)
+    gemini = load_json(root / "gemini-extension.json", errors)
 
     project_version = None
     if project is not None:
@@ -115,6 +126,7 @@ def validate_versions(root: Path, expected_version: str | None, errors: list[str
         "pyproject.toml": project_version,
         ".codex-plugin/plugin.json": codex.get("version") if codex is not None else None,
         ".claude-plugin/plugin.json": claude.get("version") if claude is not None else None,
+        "gemini-extension.json": gemini.get("version") if gemini is not None else None,
     }
     comparable = {label: version for label, version in versions.items() if version is not None}
     if len(set(comparable.values())) > 1:
@@ -189,6 +201,21 @@ def validate_claude_plugin(root: Path, errors: list[str]) -> None:
         require_string(manifest, key, ".claude-plugin/plugin.json", errors)
     validate_semver(manifest, ".claude-plugin/plugin.json", errors)
     validate_author(manifest, ".claude-plugin/plugin.json", errors)
+
+
+def validate_gemini_extension(root: Path, errors: list[str]) -> None:
+    manifest = load_json(root / "gemini-extension.json", errors)
+    if manifest is None:
+        return
+
+    reject_todos(manifest, "gemini-extension.json", errors)
+    reject_unknown_fields(manifest, GEMINI_MANIFEST_FIELDS, "gemini-extension.json", errors)
+    for key in ("name", "description"):
+        require_string(manifest, key, "gemini-extension.json", errors)
+    name = manifest.get("name")
+    if isinstance(name, str) and GEMINI_NAME_RE.fullmatch(name) is None:
+        errors.append("gemini-extension.json field `name` may only use letters, digits and dashes")
+    validate_semver(manifest, "gemini-extension.json", errors)
 
 
 def validate_skills(root: Path, errors: list[str]) -> None:

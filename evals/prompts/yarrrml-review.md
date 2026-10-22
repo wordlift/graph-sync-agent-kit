@@ -38,7 +38,7 @@ mappings:
 Requirements:
 
 - Check selector robustness.
-- Confirm relative XPath use.
+- Check the data source and selector anchoring (graph-sync mappings extract from the page HTML with XPath).
 - Check route/fallback compatibility.
 - Look for duplicate mappings.
 - Check that emitted schema.org output uses explicit IRIs and URL literals.

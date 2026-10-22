@@ -1,6 +1,6 @@
 ---
 name: graph-sync-project
-description: "Technical implementation workflow for WordLift graph-sync projects. Use when editing or reviewing graph-sync project files, worai.toml profiles, mappings, static templates, postprocessor manifests, runtime behavior, troubleshooting, tests, docs/spec synchronization, or CI smoke contracts."
+description: "Technical implementation workflow for WordLift graph-sync projects. Use when editing or reviewing graph-sync project files, worai.toml profiles, sources and profiles, crawler modes, mappings, static templates, postprocessor manifests, runtime behavior, running syncs locally on Windows/macOS/Linux, checking results in the knowledge graph, troubleshooting, tests, docs/spec synchronization, or CI smoke contracts."
 ---
 
 # Graph Sync Project
@@ -25,14 +25,26 @@ Always load `references/policy.md` for policy-sensitive graph modeling or mappin
 ## Task Routing
 
 - General runtime contract: read `references/overview.md`.
+- `worai.toml` keys and starting values: read `references/config.md`.
+- Sources, profiles, Google Sheets tabs and credentials, registering a profile: read `references/sources-and-profiles.md`.
+- Loaders, crawler modes, cost and cache: read `references/crawler.md`.
+- Running a sync on a laptop (any OS), reports, what CI does differently: read `references/local-runs.md`.
+- Knowledge graph checks around a sync (which account, did the pages land, twins, leftover entities, temporary accounts): read `references/kg-checks.md`. Other knowledge graph work (an empty API link, GraphQL, patching, exports): the `wordlift-kg` skill when installed.
 - Graph-sync CLI commands or smoke checks: read `references/cli-resolution.md`.
-- Mapping selection/config behavior: read `references/mappings.md`.
-- Static template/export behavior: read `references/static-templates.md`.
+- Mapping selection/config behavior, page identity, staging subjects: read `references/mappings.md`.
+- Static template/export behavior and the homepage: read `references/static-templates.md`.
 - Postprocessor runtime behavior: read `references/postprocessors.md`.
 - Runtime failures and regressions: read `references/troubleshooting.md`.
 - CI/smoke contract changes: read `references/ci-checklist.md` and consider `graph-sync-github-workflow-review`.
 - Custom postprocessor authoring: use `graph-sync-postprocessor-authoring`.
 - YARRRML/RML mapping review: use `graph-sync-yarrrml-review`.
+
+## Scripts
+
+Standard-library Python scripts in this skill's `scripts/` folder. Run them from the graph-sync repository root with the project environment (`uv run python <this skill>/scripts/<script> ...`); they read the API key from the profile, `.env` or the environment and never print it.
+
+- `scripts/fetch_page.py`: fetch pages exactly as a sync does (crawler, the profile's modes and key), probe the cheapest working mode, save the HTML and its XHTML conversion under `output/fetch/`, evaluate XPath like a mapping (`references/crawler.md`).
+- `scripts/kg_check.py`: `account`, `page`, `types`, `twins`, `clear-cache` (`references/kg-checks.md`). Read-only apart from the cache clear.
 
 ## Change Protocol
 
@@ -64,6 +76,8 @@ uv run ruff check .
 Do not assume `uv`, `pytest`, or `ruff` are globally installed. If the default commands fail because the runner is unavailable, use the project-documented validation command, the active virtual environment, or ask before installing/fetching tooling.
 
 If tests are absent or not meaningful, use a graph-sync CLI smoke check and the project-specific sync/audit path agreed with the user. Resolve the CLI through `references/cli-resolution.md`; do not assume bare `worai` is installed globally.
+
+Before a real sync, check the mapping on fetched pages (`scripts/fetch_page.py --xpath`), confirm the target account with the user (`scripts/kg_check.py account`), then run with `--debug --output-dir output` and follow `references/local-runs.md` for the operating system in use.
 
 For graph-sync runtime changes, verify the affected behavior:
 

@@ -16,12 +16,12 @@ Sample at least these URLs live before proposing anything:
 Requirements:
 
 - Fetch and inspect each sample URL — do not assume page structure.
-- Analyze page structure and identify the data source (HTML, JSON-LD, XHR).
+- Analyze page structure in the HTML the sync fetches; JSON-LD, embedded JSON and XHR responses are not data sources.
 - Choose the best schema.org type; avoid `schema:WebPage` and `schema:BreadcrumbList`.
-- Derive XPath or JSONPath selectors from live page inspection, not assumptions.
+- Derive XPath selectors from live page inspection, not assumptions.
 - Connect authorship to a static `schema:Person` entity where an author is present.
 - Extract FAQ and video markup only if the structure is actually present on the page.
-- Propose a `worai graph sync run` validation command using placeholder credentials (`--config worai.toml --profile <profile-name>`); do not attempt to execute it.
+- Propose a `worai graph sync run` validation command using placeholder credentials (`--config worai.toml --profile <profile-name>`); do not attempt to execute it. Say that the target account must be confirmed with the user before a real run.
 
 Expected output:
 

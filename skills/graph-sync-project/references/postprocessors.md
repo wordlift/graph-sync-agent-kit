@@ -1,75 +1,28 @@
-# Graph Sync Postprocessors Runtime
+# Graph Sync Postprocessors
 
-## Manifest Locations And Load Order
-- Runtime loads postprocessors from:
-  1. `profiles/_base/postprocessors.toml`
-  2. `profiles/<profile_name>/postprocessors.toml`
-- Enabled entries from `_base` run first, then enabled profile entries.
+Runtime details, the class contract and local testing live in `graph-sync-postprocessor-authoring` (`references/runtime.md`, `references/authoring.md`). The rules a project change must respect:
 
-## Execution Model
-- Each postprocessor runs in a subprocess:
-  - `<python> -m wordlift_sdk.kg_build.postprocessor_runner`
-- Graph handoff format:
-  - input graph serialized as N-Quads
-  - output graph read from N-Quads
-- Non-zero exit code or missing output graph fails callback processing.
+## Where They Run In The Chain
 
-## Manifest Contract
-- Global defaults in manifest:
-  - `python` default: `"./.venv/bin/python"`
-  - `timeout_seconds` default: `120`
-  - `enabled` default: `true`
-  - `keep_temp_on_error` default: `false`
-- Per-entry required:
-  - `class = "package.module:ClassName"`
-- Per-entry optional overrides:
-  - `python`
-  - `timeout_seconds`
-  - `enabled`
-  - `keep_temp_on_error`
+Per page: built-in root ID reconciler → custom postprocessors (manifest order) → built-in canonical IDs → built-in import annotation. A custom postprocessor sees staging IRIs on a first import and the existing canonical root on a re-sync.
 
-## When To Use A Postprocessor
-- Prefer mappings for stable scalar extraction and entity skeletons.
-- Use a postprocessor for rich text cleanup, nested entities such as FAQ `Question`/`Answer` or `VideoObject`, API/XHR enrichment, deduplication, validation, or reusable logic across pages.
-- Keep postprocessors focused and deterministic; avoid mixing unrelated transformations in one class.
+## Manifest
 
-## Context Passed To Postprocessors
-- `profile_name`
-- `url`
-- `dataset_uri`
-- `country_code`
-- `exports`
-- `profile` (resolved/interpolated profile object)
-- `account_key` (runtime auth key)
-- `account` (`/me` account payload without injected `key`)
-- callback response payload (`id`, `web_page.url`, `web_page.html`)
-- `ids` allocator when dataset URI is available
+- `profiles/<profile>/postprocessors.toml` **replaces** `profiles/_base/postprocessors.toml` for that profile; the two are never combined. A profile that needs the shared postprocessors plus its own lists all of them.
+- `class = "package.module:ClassName"`, with the package under `src/`.
 
-## SDK 5.1.1+ Compatibility Note
-- `context.settings` is removed; read config from `context.profile`.
-- `context.account.key` is not injected; use `context.account_key`.
+## Runtime Per Environment
 
-## Template Example Dependency Note
-- The bundled YouTube example postprocessor (`src/wl1506345_graph_sync/postprocessors/youtube.py`) uses `lxml` for HTML iframe parsing.
+- Commit `postprocessor_runtime = "persistent"` (CI). It runs workers in the manifest's `python` (default `./.venv/bin/python`).
+- Local Windows runs use `inprocess` in a local config copy (`references/local-runs.md`); never commit it.
 
-## Manifest Example
-```toml
-# profiles/_base/postprocessors.toml
-python = "./.venv/bin/python"
-timeout_seconds = 120
-enabled = true
-keep_temp_on_error = false
+## When To Use One
 
-[[postprocessors]]
-class = "my_project.postprocessors:NormalizeProductIds"
+- Prefer mappings and static templates; YARRRML on `worph` handles conditionals and string functions.
+- Use a postprocessor for typed literals, list positions from scoped iterators, data outside the page (a Google Sheet, an external API), deduplication and cross-entity linking.
+- Never as a way to read the page's own XHR responses or embedded JSON.
+- Postprocessors change values and links between existing entities. They never create subjects or rename IRIs, and never emit static-template entities with partial properties.
 
-[[postprocessors]]
-class = "my_project.postprocessors:DropInvalidOffers"
-enabled = true
-timeout_seconds = 60
-keep_temp_on_error = true
-```
+## CI Secrets
 
-## Failure Artifacts
-- If `keep_temp_on_error = true`, runtime copies temp artifacts to:
-  - `output/postprocessor_debug/<class_path_sanitized>/`
+A postprocessor that reads `os.environ` needs that variable as a repository secret **and** in the workflow step's `env:`. Postprocessors are written to skip silently on errors, so a missing secret leaves CI green while the feature writes nothing.
